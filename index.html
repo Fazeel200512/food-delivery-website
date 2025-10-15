@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodie Crush - Order Your Favorite Food</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #d6081a 0%, #3908e8 100%);
+        }
+        .slide-enter {
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .bounce-in {
+            animation: bounceIn 0.4s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .cart-badge {
+            animation: pulse 0.3s ease-in-out;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .quantity-btn {
+            transition: all 0.2s ease;
+        }
+        .quantity-btn:hover {
+            transform: scale(1.1);
+        }
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+        }
+        .slide {
+            transition: transform 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-lg z-50">
+        <div class="container mx-auto px-6">
+            <!-- Main Navigation Bar -->
+            <div class="flex items-center justify-between py-4">
+                <!-- Left Section: Logo and Corporate -->
+                <div class="flex items-center space-x-8">
+                    <!-- Foodie Crush Logo -->
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-utensils text-white text-lg"></i>
+                        </div>
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+                            The Feast Hub
+                        </h1>
+                    </div>
+                    
+                </div>
+                
+                <!-- Right Section: Navigation Items -->
+                <div class="flex items-center space-x-6">
+                    <!-- Search -->
+                    <div class="relative">
+                        <button onclick="toggleSearch()" class="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-orange-500 transition-colors rounded-lg hover:bg-orange-50">
+                            <i class="fas fa-search text-lg"></i>
+                            <span class="hidden sm:block font-medium">Search</span>
+                        </button>
+                        
+                        <!-- Search Bar (Hidden by default) -->
+                        <div id="searchBar" class="absolute top-full right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl p-4 hidden slide-enter">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-search text-gray-400"></i>
+                                <input type="text" id="searchInput" placeholder="Search for food, restaurants..." class="flex-1 outline-none text-gray-700 placeholder-gray-400" oninput="searchItems()" onkeypress="handleSearchEnter(event)">
+                                <button onclick="clearSearch()" class="text-orange-500 hover:text-orange-600">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="mt-3 pt-3 border-t border-gray-100">
+                                <p class="text-xs text-gray-500 mb-2">Popular Searches</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm cursor-pointer hover:bg-orange-100 hover:text-orange-600">Pizza</span>
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm cursor-pointer hover:bg-orange-100 hover:text-orange-600">Burger</span>
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm cursor-pointer hover:bg-orange-100 hover:text-orange-600">Biryani</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Offers with NEW tag -->
+                    <div class="relative">
+                        <a href="offers.html" class="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-orange-500 transition-colors rounded-lg hover:bg-orange-50">
+                            <i class="fas fa-gift text-lg"></i>
+                            <span class="hidden sm:block font-medium">Offers</span>
+                        </a>
+                        <!-- NEW Tag -->
+                        <div class="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs px-2 py-1 rounded-full font-bold animate-pulse">
+                            NEW
+                        </div>
+                    </div>
+                    
+                    <!-- Help -->
+                    <a href="help.html" class="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-orange-500 transition-colors rounded-lg hover:bg-orange-50">
+                        <i class="fas fa-question-circle text-lg"></i>
+                        <span class="hidden sm:block font-medium">Help</span>
+                    </a>
+                    
+                    <!-- Cart -->
+                    <button onclick="toggleCart()" class="relative flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-shopping-cart text-lg"></i>
+                        <span class="font-medium">Cart</span>
+                        <span id="cartBadge" class="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center hidden animate-bounce">0</span>
+                    </button>
+
+                    <!-- Login -->
+                    <a href="login.html" class="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-orange-500 transition-colors rounded-lg hover:bg-orange-50">
+                        <i class="fas fa-sign-in-alt text-lg"></i>
+                        <span class="hidden sm:block font-medium">Login</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden flex items-center justify-between py-2 border-t border-gray-100">
+                <button onclick="toggleMobileMenu()" class="flex items-center space-x-2 text-gray-600">
+                    <i class="fas fa-bars"></i>
+                    <span>Menu</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobileMenu" class="md:hidden bg-white border-t border-gray-200 hidden">
+            <div class="px-6 py-4 space-y-4">
+                <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-orange-500">
+                    <i class="fas fa-building w-5"></i>
+                    <span>Foodie Crush Corporate</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-orange-500">
+                    <i class="fas fa-search w-5"></i>
+                    <span>Search</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-orange-500">
+                    <i class="fas fa-gift w-5"></i>
+                    <span>Offers</span>
+                    <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">NEW</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-orange-500">
+                    <i class="fas fa-question-circle w-5"></i>
+                    <span>Help</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+<!-- Welcome Banner -->
+<div class="gradient-bg text-white py-4">
+    <div class="container mx-auto px-4">
+        <h2 id="welcomeMessage" class="text-2xl font-bold text-center">
+            The Feast Hub Welocmes You!
+        </h2>
+    </div>
+</div>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+    const welcomeEl = document.getElementById('welcomeMessage');
+
+    // Get the current logged-in user
+    let currentUser = null;
+    try {
+        currentUser = JSON.parse(localStorage.getItem('user.json'));
+    } catch(e) {
+        currentUser = null;
+    }
+
+    if (currentUser && currentUser.username) {
+        // Show personalized welcome
+        welcomeEl.textContent = `The Feast Hub Welocmes You, ${currentUser.username}!`;
+
+        // Ensure cart exists
+        const cartKey = `cart_${currentUser.username}`;
+        if (!localStorage.getItem(cartKey)) {
+            localStorage.setItem(cartKey, JSON.stringify([]));
+        }
+    } else {
+        // No logged-in user → generic welcome
+        welcomeEl.textContent = `The Feast Hub Welocmes You!`;
+    }
+});
+</script>
+
+
+
+
+    <!-- Image Slider -->
+    <div class="slider-container h-96 relative">
+        <div id="slider" class="flex h-full slide">
+            <div class="min-w-full h-full relative">
+                <img src="https://images.unsplash.com/photo-1646257098224-a3e75d0436c7?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHBpenphJTIwb2ZmZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=700" alt="Spicy Festival" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="min-w-full h-full bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center text-white" style="display: none;">
+                    <div class="text-center">
+                        <h3 class="text-4xl font-bold mb-4">BOGO Offer</h3>
+                        <p class="text-xl mb-6">Buy one Get one on every Wednesday and friday</p>
+                        <button class="bg-white text-red-500 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition-colors">Order Now</button>
+                    </div>
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white">
+                    <div class="text-center">
+                        <h3 class="text-4xl font-bold mb-4">BOGO Offer</h3>
+                        <p class="text-xl mb-6">Buy one Get one on every Wednesday and friday</p>
+                        <button class="bg-white text-red-500 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition-colors">Order Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="min-w-full h-full relative">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=700" alt="Pizza Mania" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="min-w-full h-full bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center text-white" style="display: none;">
+                    <div class="text-center">
+                        <h3 class="text-4xl font-bold mb-4">Royal pizza</h3>
+                        <p class="text-xl mb-6">Monster pizza available</p>
+                        <button class="bg-white text-green-500 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition-colors">Grab Deal</button>
+                    </div>
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white">
+                    <div class="text-center">
+                        <h3 class="text-4xl font-bold mb-4">Royal pizza</h3>
+                        <p class="text-xl mb-6">Monster pizza available</p>
+                        <button class="bg-white text-green-500 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition-colors">Grab Deal</button>
+                    </div>
+                </div>
+            </div>
+            <div class="min-w-full h-full relative">
+                <img src="https://images.unsplash.com/photo-1727355819370-5646696bf71d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGNyZWFteSUyMHBhc3RhfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=700" alt="Sweet Treats" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="min-w-full h-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white" style="display: none;">
+                    <div class="text-center">
+                        <h3 class="text-4xl font-bold mb-4">Creamy Cravings</h3>
+                        <p class="text-xl mb-6">Italian Pasta @ ₹299</p>
+                        <button class="bg-white text-purple-500 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition-colors">Explore</button>
+                    </div>
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white">
+                    <div class="text-center">
+                        <h3 class="text-4xl font-bold mb-4">Creamy Cravings</h3>
+                        <p class="text-xl mb-6">Italian Pasta @ ₹299</p>
+                        <button class="bg-white text-purple-500 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition-colors">Explore</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button onclick="prevSlide()" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-3 transition-all">
+            <i class="fas fa-chevron-left text-gray-700"></i>
+        </button>
+        <button onclick="nextSlide()" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-3 transition-all">
+            <i class="fas fa-chevron-right text-gray-700"></i>
+        </button>
+    </div>
+
+    <!-- Categories Navigation -->
+    <div class="bg-white py-6 shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center space-x-8 overflow-x-auto">
+                <button onclick="filterByCategory('pizza')" class="category-btn flex flex-col items-center space-y-2 p-4 rounded-lg hover:bg-orange-50 transition-colors min-w-max">
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center text-2xl">🍕</div>
+                    <span class="font-medium text-gray-700">Pizza</span>
+                </button>
+                <button onclick="filterByCategory('burger')" class="category-btn flex flex-col items-center space-y-2 p-4 rounded-lg hover:bg-orange-50 transition-colors min-w-max">
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center text-2xl">🍔</div>
+                    <span class="font-medium text-gray-700">Burgers</span>
+                </button>
+                <button onclick="filterByCategory('dessert')" class="category-btn flex flex-col items-center space-y-2 p-4 rounded-lg hover:bg-orange-50 transition-colors min-w-max">
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center text-2xl">🍰</div>
+                    <span class="font-medium text-gray-700">Pasta</span>
+                </button>
+    
+                <button onclick="filterByCategory('beverage')" class="category-btn flex flex-col items-center space-y-2 p-4 rounded-lg hover:bg-orange-50 transition-colors min-w-max">
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center text-2xl">🥤</div>
+                    <span class="font-medium text-gray-700">Coffee</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Best Sellers Section -->
+    <div class="container mx-auto px-4 py-12">
+        <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">FEAST HUB RECOMMENDED</h2>
+        
+        <div id="foodGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Food items will be populated by JavaScript -->
+        </div>
+        
+        <div class="text-center mt-12">
+            <button onclick="toggleExploreMenu()" class="explore-btn bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-lg font-bold text-lg transition-colors hover-lift">
+                EXPLORE FULL MENU
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div id="cartSidebar" class="fixed right-0 top-0 h-full w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="text-xl font-bold text-gray-800">Your Cart</h3>
+                <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="cartItems" class="flex-1 overflow-y-auto p-6">
+            <div class="text-center text-gray-500 mt-20">
+                <i class="fas fa-shopping-cart text-4xl mb-4"></i>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+        
+        <div id="cartFooter" class="p-6 border-t border-gray-200 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-lg font-bold">Total: </span>
+                <span id="cartTotal" class="text-xl font-bold text-orange-500">₹0</span>
+            </div>
+            <button onclick="proceedToCheckout()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-bold transition-colors">
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div id="cartOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40" onclick="toggleCart()"></div>
+<!-- Footer -->
+<footer class="bg-black text-white py-12">
+    <div class="container mx-auto px-4">
+        <!-- Team Info Side by Side -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <!-- Faculty -->
+            <div>
+                <h4 class="text-lg font-bold mb-2 text-orange-400">Faculty</h4>
+                <p class="text-gray-300">M.S Nagalakshmi</p>
+            </div>
+
+            <!-- Team Name -->
+            <div>
+                <h4 class="text-lg font-bold mb-2 text-orange-400">Team Name</h4>
+                <p class="text-gray-300">Food Hunters</p>
+            </div>
+
+            <!-- Team Members -->
+            <div>
+                <h4 class="text-lg font-bold mb-2 text-orange-400">Team Members</h4>
+                <ul class="text-gray-300 list-disc list-inside space-y-1">
+                    <li>Mohammed Fazeeluddin</li>
+                    <li>Mohammed Rahamath</li>
+                    <li>Mohammed Mohiuddin khan</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bottom Bar / Company Info -->
+        <div class="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-4 md:mb-0">
+                <div class="w-10 h-10 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center">
+                    <i class="fas fa-utensils text-white text-lg"></i>
+                </div>
+                <h3 class="text-xl font-bold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">
+                   The Feast Hub
+                </h3>
+            </div>
+            <p class="text-gray-300 mb-4 md:mb-0">Delicious food delivered to your doorstep. Fresh, fast, and always satisfying.</p>
+            <div class="flex space-x-2 items-center">
+                <span class="text-gray-300 text-sm">We Accept:</span>
+                <i class="fab fa-cc-visa text-2xl text-blue-400"></i>
+                <i class="fab fa-cc-mastercard text-2xl text-red-400"></i>
+                <i class="fab fa-cc-paypal text-2xl text-blue-300"></i>
+                <i class="fas fa-mobile-alt text-2xl text-green-400"></i>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <p class="text-gray-300 text-sm mt-4 text-center">© 2025 The Feast Hub. All rights reserved.</p>
+    </div>
+</footer>
+
+
+
+    
+
+    <script>
+        // Global variables
+        let currentSlide = 0;
+        let cart = [];
+
+        let currentFilters = {
+            category: '',
+            cuisine: '',
+            type: ''
+        };
+        let displayedItems = 12; // Initially show 12 items
+        let showingAll = false;
+
+        // Food items data
+        const foodItems = [
+            {
+                id: 1,
+                name: "American Cheesy Burger",
+                price: 299,
+                image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop",
+                category: "burger",
+                cuisine: "indian",
+                type: "nonveg",
+                description: "Juicy chicken patty with fresh vegetables"
+            },
+            {
+                id: 2,
+                name: "Dynamite Burger",
+                price: 349,
+                image: "https://images.immediate.co.uk/production/volatile/sites/30/2025/04/Crispiest-buttermilk-fried-chicken-burgers-90854e5.jpg",
+                category: "burger",
+                cuisine: "indian",
+                type: "nonveg",
+                description: "Extra spicy chicken burger with special sauce"
+            },
+            {
+                id: 3,
+                name: "Honey Gochujang Burger",
+                price: 279,
+                image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=300&fit=crop",
+                category: "burger",
+                cuisine: "indian",
+                type: "veg",
+                description: "Grilled paneer patty with mint chutney"
+            },
+            {
+                id: 4,
+                name: "Margherita Pizza",
+                price: 399,
+                image: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=400&h=300&fit=crop",
+                category: "pizza",
+                cuisine: "italian",
+                type: "veg",
+                description: "Classic pizza with tomato sauce and mozzarella"
+            },
+            {
+                id: 5,
+                name: "Chicken BBQ Pizza",
+                price: 549,
+                image: "https://images.unsplash.com/photo-1604917869287-3ae73c77e227?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y2hpY2tlbiUyMHBpenphfGVufDB8fDB8fHww",
+                category: "pizza",
+                cuisine: "italian",
+                type: "nonveg",
+                description: "Loaded with chicken and vegetables"
+            },
+            {
+                id: 6,
+                name: "Alfredo Pasta",
+                price: 199,
+                image: "https://media.istockphoto.com/id/1398788293/photo/white-sauce-penne-pasta-directly-above-photo.jpg?s=612x612&w=0&k=20&c=azZJNRLTIPhniO6Rhk0MJVzAHlXOy5KMyr7JZNQCDxQ=",
+                category: "dessert",
+                cuisine: "italian",
+                type: "veg",
+                description: "Rich chocolate brownie with vanilla ice cream"
+            },
+            {
+                id: 6,
+                name: "Pesto Pasta",
+                price: 249,
+                image: "https://media.istockphoto.com/id/1045283212/photo/tasty-pasta-with-pesto-served-on-plate.jpg?s=612x612&w=0&k=20&c=eIQbBIM37oiPwmdbmWn11_W4nKlpEhz9ms2gYEBkBYs=",
+                category: "dessert",
+                cuisine: "italian",
+                type: "veg",
+                description: "Loaded with Green Sauce and Veggies"
+            },
+            {
+                id: 7,
+                name: "Agilio olio",
+                price: 349,
+                image: "https://media.istockphoto.com/id/2198563007/photo/valentines-day-themed-food-stock-photo.jpg?s=612x612&w=0&k=20&c=FlFRpRNG0Fcaa2HQACp2k-kqmkzt_ptvS1CQczKbYsY=",
+                category: "dessert",
+                cuisine: "italian",
+                type: "veg",
+                description: "Spaghetti with garlic and olive oil"
+            },
+           
+            {
+                id: 10,
+                name: "Espresso",
+                price: 199,
+                image: "https://images.unsplash.com/photo-1529892485617-25f63cd7b1e9?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODJ8fGVzcHJlc3NvfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=700",
+                category: "beverage",
+                cuisine: "indian",
+                type: "veg",
+                description: "Freshly squeezed orange juice"
+            },
+            
+            {
+                id: 13,
+                name: "Pepperoni Pizza",
+                price: 499,
+                image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400&h=300&fit=crop",
+                category: "pizza",
+                cuisine: "italian",
+                type: "nonveg",
+                description: "Classic pepperoni pizza with extra cheese"
+            },
+           
+            {
+                id: 18,
+                name: "Signature Hot Chocolate",
+                price: 149,
+                image: "https://images.unsplash.com/photo-1466337105551-aa3ab7890939?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTh8fGhvdCUyMGNob2NvbGF0ZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=700",
+                category: "beverage",
+                cuisine: "italian",
+                type: "veg",
+                description: "made dark coco powder and milk"
+            },
+            {
+                id: 18,
+                name: "Hot Americano",
+                price: 149,
+                image: "https://images.unsplash.com/photo-1587985782608-20062892559d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGhvdCUyMGFtZXJpY2Fub3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=700",
+                category: "beverage",
+                cuisine: "italian",
+                type: "veg",
+                description: "made dark coco powder and milk"
+            },
+           
+        ];
+
+        // Initialize the app
+        function init() {
+            displayFoodItems(foodItems);
+            startSlider();
+        }
+
+        // Slider functionality
+        function startSlider() {
+            setInterval(() => {
+                nextSlide();
+            }, 5000);
+        }
+
+        function nextSlide() {
+            const slider = document.getElementById('slider');
+            currentSlide = (currentSlide + 1) % 3;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        function prevSlide() {
+            const slider = document.getElementById('slider');
+            currentSlide = currentSlide === 0 ? 2 : currentSlide - 1;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        // Display food items
+        function displayFoodItems(items) {
+            const grid = document.getElementById('foodGrid');
+            grid.innerHTML = '';
+
+            const itemsToShow = showingAll ? items : items.slice(0, displayedItems);
+            
+            itemsToShow.forEach(item => {
+                const itemCard = createFoodCard(item);
+                grid.appendChild(itemCard);
+            });
+            
+            // Update explore button visibility
+            updateExploreButton(items.length);
+        }
+        
+        function updateExploreButton(totalItems) {
+            const exploreBtn = document.querySelector('.explore-btn');
+            if (totalItems > displayedItems && !showingAll) {
+                exploreBtn.textContent = `EXPLORE FULL MENU (${totalItems - displayedItems} more items)`;
+                exploreBtn.style.display = 'inline-block';
+            } else if (showingAll) {
+                exploreBtn.textContent = 'SHOW LESS';
+                exploreBtn.style.display = 'inline-block';
+            } else {
+                exploreBtn.style.display = 'none';
+            }
+        }
+        
+        function toggleExploreMenu() {
+            showingAll = !showingAll;
+            
+            // Get current filtered items
+            let currentItems = foodItems;
+            if (currentFilters.category) {
+                currentItems = currentItems.filter(item => item.category === currentFilters.category);
+            }
+            if (currentFilters.cuisine) {
+                currentItems = currentItems.filter(item => item.cuisine === currentFilters.cuisine);
+            }
+            if (currentFilters.type) {
+                currentItems = currentItems.filter(item => item.type === currentFilters.type);
+            }
+            
+            displayFoodItems(currentItems);
+        }
+
+        // Create food card
+        function createFoodCard(item) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow-lg overflow-hidden hover-lift fade-in';
+            
+            const typeColor = item.type === 'veg' ? 'border-green-500 text-green-600' : 'border-red-500 text-red-600';
+            const typeIcon = item.type === 'veg' ? 'fas fa-leaf' : 'fas fa-drumstick-bite';
+            
+            card.innerHTML = `
+                <div class="relative">
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover" onerror="this.src=''; this.alt='Image failed to load'; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-48 bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center text-6xl" style="display: none;">
+                        🍽️
+                    </div>
+                    <div class="absolute top-4 right-4">
+                        <div class="w-6 h-6 border-2 ${typeColor} rounded-sm flex items-center justify-center bg-white">
+                            <i class="${typeIcon} text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">${item.name}</h3>
+                    <p class="text-gray-600 text-sm mb-4">${item.description}</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-orange-500">₹${item.price}</span>
+                        <div id="item-${item.id}" class="item-controls">
+                            <button onclick="addToCart(${item.id})" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-bold transition-colors">
+                                ADD
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Cart functionality
+        function addToCart(itemId) {
+            const item = foodItems.find(f => f.id === itemId);
+            if (!item) return;
+            
+            const existingItem = cart.find(c => c.id === itemId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            
+            updateCartUI();
+            updateItemControls(itemId);
+            animateCartBadge();
+            showAddToCartFeedback(item.name);
+            saveCartToStorage();
+        }
+        
+        function showAddToCartFeedback(itemName) {
+            // Create and show a temporary success message
+            const feedback = document.createElement('div');
+            feedback.className = 'fixed top-24 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300';
+            feedback.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${itemName} added to cart!</span>
+                </div>
+            `;
+            
+            document.body.appendChild(feedback);
+            
+            // Animate in
+            setTimeout(() => {
+                feedback.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Animate out and remove
+            setTimeout(() => {
+                feedback.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(feedback);
+                }, 300);
+            }, 2000);
+        }
+
+        function removeFromCart(itemId) {
+            const itemIndex = cart.findIndex(c => c.id === itemId);
+            if (itemIndex > -1) {
+                if (cart[itemIndex].quantity > 1) {
+                    cart[itemIndex].quantity -= 1;
+                } else {
+                    cart.splice(itemIndex, 1);
+                }
+            }
+            
+            updateCartUI();
+            updateItemControls(itemId);
+            saveCartToStorage();
+        }
+
+        function updateQuantity(itemId, change) {
+            const item = cart.find(c => c.id === itemId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(itemId);
+                } else {
+                    updateCartUI();
+                    updateItemControls(itemId);
+                    saveCartToStorage();
+                }
+            }
+        }
+
+        function updateItemControls(itemId) {
+            const controlsDiv = document.getElementById(`item-${itemId}`);
+            const cartItem = cart.find(c => c.id === itemId);
+            
+            if (cartItem) {
+                controlsDiv.innerHTML = `
+                    <div class="flex items-center space-x-2 bounce-in">
+                        <button onclick="updateQuantity(${itemId}, -1)" class="quantity-btn bg-red-500 hover:bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center">
+                            <i class="fas fa-minus text-xs"></i>
+                        </button>
+                        <span class="font-bold text-lg min-w-8 text-center">${cartItem.quantity}</span>
+                        <button onclick="updateQuantity(${itemId}, 1)" class="quantity-btn bg-green-500 hover:bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center">
+                            <i class="fas fa-plus text-xs"></i>
+                        </button>
+                    </div>
+                `;
+            } else {
+                controlsDiv.innerHTML = `
+                    <button onclick="addToCart(${itemId})" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-bold transition-colors">
+                        ADD
+                    </button>
+                `;
+            }
+        }
+
+        function updateCartUI() {
+            const cartItems = document.getElementById('cartItems');
+            const cartBadge = document.getElementById('cartBadge');
+            const cartFooter = document.getElementById('cartFooter');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // Update badge
+            if (totalItems > 0) {
+                cartBadge.textContent = totalItems;
+                cartBadge.classList.remove('hidden');
+            } else {
+                cartBadge.classList.add('hidden');
+            }
+            
+            // Update cart items
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="text-center text-gray-500 mt-20">
+                        <i class="fas fa-shopping-cart text-4xl mb-4"></i>
+                        <p>Your cart is empty</p>
+                    </div>
+                `;
+                cartFooter.classList.add('hidden');
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="flex items-center justify-between p-4 border-b border-gray-200 fade-in">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                                <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="w-full h-full bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center text-2xl" style="display: none;">
+                                    🍽️
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-medium text-gray-800 truncate">${item.name}</h4>
+                                <p class="text-orange-500 font-bold">₹${item.price} each</p>
+                                <p class="text-sm text-gray-500">Total: ₹${item.price * item.quantity}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2 flex-shrink-0">
+                            <button onclick="updateQuantity(${item.id}, -1)" class="quantity-btn bg-red-500 hover:bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center transition-all">
+                                <i class="fas fa-minus text-xs"></i>
+                            </button>
+                            <span class="font-bold text-lg min-w-8 text-center">${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.id}, 1)" class="quantity-btn bg-green-500 hover:bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center transition-all">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                cartTotal.textContent = `₹${totalPrice}`;
+                cartFooter.classList.remove('hidden');
+            }
+        }
+
+        function animateCartBadge() {
+            const badge = document.getElementById('cartBadge');
+            badge.classList.add('cart-badge');
+            setTimeout(() => {
+                badge.classList.remove('cart-badge');
+            }, 300);
+        }
+
+        function toggleCart() {
+            const sidebar = document.getElementById('cartSidebar');
+            const overlay = document.getElementById('cartOverlay');
+            
+            if (sidebar.classList.contains('translate-x-full')) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // Filter functionality
+        function filterByCategory(category) {
+            currentFilters.category = currentFilters.category === category ? '' : category;
+            applyFilters();
+            
+            // Update active category button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('bg-orange-100');
+            });
+            
+            if (currentFilters.category) {
+                event.target.closest('.category-btn').classList.add('bg-orange-100');
+            }
+        }
+
+        function filterByCuisine() {
+            const select = document.getElementById('cuisineFilter');
+            currentFilters.cuisine = select.value;
+            applyFilters();
+        }
+
+        function filterByType(type) {
+            currentFilters.type = currentFilters.type === type ? '' : type;
+            applyFilters();
+            
+            // Update button styles
+            document.getElementById('vegBtn').classList.remove('bg-green-500', 'text-white');
+            document.getElementById('vegBtn').classList.add('border-green-500', 'text-green-600');
+            document.getElementById('nonvegBtn').classList.remove('bg-red-500', 'text-white');
+            document.getElementById('nonvegBtn').classList.add('border-red-500', 'text-red-600');
+            
+            if (currentFilters.type === 'veg') {
+                document.getElementById('vegBtn').classList.remove('border-green-500', 'text-green-600');
+                document.getElementById('vegBtn').classList.add('bg-green-500', 'text-white');
+            } else if (currentFilters.type === 'nonveg') {
+                document.getElementById('nonvegBtn').classList.remove('border-red-500', 'text-red-600');
+                document.getElementById('nonvegBtn').classList.add('bg-red-500', 'text-white');
+            }
+        }
+
+        function clearFilters() {
+            currentFilters = { category: '', cuisine: '', type: '' };
+            document.getElementById('cuisineFilter').value = '';
+            
+            // Reset button styles
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('bg-orange-100');
+            });
+            
+            document.getElementById('vegBtn').classList.remove('bg-green-500', 'text-white');
+            document.getElementById('vegBtn').classList.add('border-green-500', 'text-green-600');
+            document.getElementById('nonvegBtn').classList.remove('bg-red-500', 'text-white');
+            document.getElementById('nonvegBtn').classList.add('border-red-500', 'text-red-600');
+            
+            applyFilters();
+        }
+
+        function applyFilters() {
+            let filteredItems = foodItems;
+            
+            if (currentFilters.category) {
+                filteredItems = filteredItems.filter(item => item.category === currentFilters.category);
+            }
+            
+            if (currentFilters.cuisine) {
+                filteredItems = filteredItems.filter(item => item.cuisine === currentFilters.cuisine);
+            }
+            
+            if (currentFilters.type) {
+                filteredItems = filteredItems.filter(item => item.type === currentFilters.type);
+            }
+            
+            displayFoodItems(filteredItems);
+        }
+
+
+
+        // Search functionality
+        function toggleSearch() {
+            const searchBar = document.getElementById('searchBar');
+            searchBar.classList.toggle('hidden');
+            
+            if (!searchBar.classList.contains('hidden')) {
+                searchBar.querySelector('input').focus();
+            }
+        }
+
+        function searchItems() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                displayFoodItems(foodItems);
+                return;
+            }
+            
+            const filteredItems = foodItems.filter(item => 
+                item.name.toLowerCase().includes(searchTerm) ||
+                item.description.toLowerCase().includes(searchTerm) ||
+                item.category.toLowerCase().includes(searchTerm) ||
+                item.cuisine.toLowerCase().includes(searchTerm)
+            );
+            
+            displayFoodItems(filteredItems);
+            
+            // Update the section title to show search results
+            const sectionTitle = document.querySelector('h2');
+            if (filteredItems.length > 0) {
+                sectionTitle.textContent = `SEARCH RESULTS (${filteredItems.length} items found)`;
+            } else {
+                sectionTitle.textContent = 'NO ITEMS FOUND';
+            }
+        }
+
+        function handleSearchEnter(event) {
+            if (event.key === 'Enter') {
+                searchItems();
+                toggleSearch(); // Close search bar after search
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            displayFoodItems(foodItems);
+            document.querySelector('h2').textContent = 'BEST SELLERS';
+            toggleSearch();
+        }
+
+        // Cart persistence
+        function saveCartToStorage() {
+            localStorage.setItem('foodiecrush_cart', JSON.stringify(cart));
+        }
+        
+        function loadCartFromStorage() {
+            const savedCart = localStorage.getItem('foodiecrush_cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCartUI();
+                // Update all item controls
+                cart.forEach(item => updateItemControls(item.id));
+            }
+        }
+        
+        // Navigation functions
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                showNotification('Your cart is empty! Please add some items before checkout.', 'warning');
+                return;
+            }
+            
+            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            // Store cart data in localStorage for the checkout page
+            localStorage.setItem('cartData', JSON.stringify(cart));
+            localStorage.setItem('cartTotal', totalAmount);
+            localStorage.setItem('cartItemCount', totalItems);
+            
+            // Show checkout confirmation
+            showNotification(`Proceeding to checkout with ${totalItems} items (₹${totalAmount})`, 'success');
+            
+            // Redirect to checkout page
+            setTimeout(() => {
+                window.open('checkout.html', '_blank');
+            }, 1000);
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-green-500' : type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500';
+            
+            notification.className = `fixed top-24 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Animate out and remove
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Mobile menu functionality
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Close search bar when clicking outside
+        document.addEventListener('click', function(event) {
+            const searchBar = document.getElementById('searchBar');
+            const searchButton = event.target.closest('[onclick="toggleSearch()"]');
+            
+            if (!searchBar.contains(event.target) && !searchButton) {
+                searchBar.classList.add('hidden');
+            }
+        });
+
+        // Initialize the app when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+            loadCartFromStorage();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98af9f41e4100522',t:'MTc1OTg2MzQyNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
